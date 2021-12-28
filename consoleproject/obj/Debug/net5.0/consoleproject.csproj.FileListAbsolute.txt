@@ -1,0 +1,16 @@
+/Users/timjonsson/Projects/testStar/consoleproject/bin/Debug/net5.0/consoleproject.deps.json
+/Users/timjonsson/Projects/testStar/consoleproject/bin/Debug/net5.0/consoleproject.runtimeconfig.json
+/Users/timjonsson/Projects/testStar/consoleproject/bin/Debug/net5.0/consoleproject.runtimeconfig.dev.json
+/Users/timjonsson/Projects/testStar/consoleproject/bin/Debug/net5.0/consoleproject.dll
+/Users/timjonsson/Projects/testStar/consoleproject/bin/Debug/net5.0/ref/consoleproject.dll
+/Users/timjonsson/Projects/testStar/consoleproject/bin/Debug/net5.0/consoleproject.pdb
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/consoleproject.csproj.AssemblyReference.cache
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/consoleproject.GeneratedMSBuildEditorConfig.editorconfig
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/consoleproject.AssemblyInfoInputs.cache
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/consoleproject.AssemblyInfo.cs
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/consoleproject.csproj.CoreCompileInputs.cache
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/consoleproject.dll
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/ref/consoleproject.dll
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/consoleproject.pdb
+/Users/timjonsson/Projects/testStar/consoleproject/obj/Debug/net5.0/consoleproject.genruntimeconfig.cache
+/Users/timjonsson/Projects/testStar/consoleproject/bin/Debug/net5.0/Newtonsoft.Json.dll

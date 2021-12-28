@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "Name": "Teak",
+      "Material": "Wood",
+      "Quantity": 939,
+      "Price": 215,
+      "VatPercentage": 1.25,
+      "PriceWithVat": 268.75
+    },
+    {
+      "Name": "MDF",
+      "Material": "Wood",
+      "Quantity": 1,
+      "Price": 145,
+      "VatPercentage": 1.25,
+      "PriceWithVat": 181.25
+    },
+    {
+      "Name": "Fujalusa",
+      "Material": "Plastic",
+      "Quantity": 456,
+      "Price": 89,
+      "VatPercentage": 1.25,
+      "PriceWithVat": 111.25
+    }
+  ]
+}
