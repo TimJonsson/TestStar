@@ -56,10 +56,10 @@ namespace consoleproject
 
         public CostSummary(SearchRepository searchRepository, JsonHandler jsonHandler)
         {
+            _searchRepository = searchRepository;
+            _jsonHandler = jsonHandler;
             _created = Convert.ToString(DateTime.Now);
             _summaryID = getSummaryID();
-            this._searchRepository = searchRepository;
-            this._jsonHandler = jsonHandler;
         }
 
         public CostSummary(int summaryID, string created)
