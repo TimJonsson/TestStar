@@ -1,57 +1,77 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Newtonsoft;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using System.Web;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace consoleproject
 {
-   class Program
+    class Program
     {
         static void Main(string[] args)
         {
-            // CostSummary costSummary = new CostSummary(); 
-            // costSummary.addItem("Teak", 200);
-            // // costSummary.addCustomerName("TImmie");
-            // SummaryManager summaryManager = new SummaryManager(); 
-            // summaryManager.showSummaryDetails(costSummary); 
-            // // costSummary.addItem("MDF", 200);
-            // // costSummary.addItem("Fujalusa", 200);
-            // costSummary.addCustomerName("Timmie");
-            // var dueDate = new DateTime(2008, 3, 1, 7, 0, 0);
-            // costSummary.addDueDate(dueDate);
 
-            // CostSummary costSummary1 = new CostSummary(); 
-            // costSummary1.addItem("Fujalusa", 200);
-            // costSummary1.addItem("MDF", 200);
-            // costSummary1.addItem("Teak", 300);
-            // costSummary1.addCustomerName("Alex");
-            // var dueDate1 = new DateTime(2008, 3, 1, 8, 0, 0);
-            // costSummary1.addDueDate(dueDate1);
-            // costSummary1.updateVatAmountOnItem("MDF", 1.90);
+            // Down below I will test all the functional requirements
+            // Will later be converted to Unit tests 
 
-            // SummaryManager.addCostSummary(costSummary1);
-            // // summaryManager.showSummaryDetails();
-            // SummaryManager.saveSummaryToFile(costSummary1);
-            // SummaryManager.showSummaryDetails(costSummary1);
-            SearchRepository searchRepository = new SearchRepository();
-            JsonHandler jsonHandler = new JsonHandler();
-            CostSummary costSummary = new CostSummary(searchRepository, jsonHandler); 
-            costSummary.addItem("MDF", 99);
-            SummaryManager summaryManager = new SummaryManager(); 
+            // Creating instanses of each used class 
+            JsonSerializer jsonSerializer = new JsonSerializer();
+            JsonHandler jsonHandler = new JsonHandler(jsonSerializer);
+            SearchRepository searchRepository = new SearchRepository(jsonHandler);
+            SummaryData summaryData = new SummaryData();
+            CostSummary costSummary = new CostSummary(searchRepository, jsonHandler);
+            SummaryManager summaryManager = new SummaryManager(searchRepository, jsonHandler, summaryData);
+
+            //Functional requirements below
+
+            // Create and work with a Cost summary 
+            costSummary.addItem("Mdf", 99);
+            costSummary.addItem("Teak", 50);
+            costSummary.addCustomerName("Tim Jonsson");
+            // Fix Dudate
+            var dueDate1 = new DateTime(2022, 03, 01);
+            costSummary.addDueDate(dueDate1);
+            costSummary.updateVatAmountOnItem("Mdf", 0.3);
+
+            //Show the current summary on screen
+            summaryManager.showSummaryDetails(costSummary);
+
+            //Save the summary to a file
+            summaryManager.saveSummaryToFile(costSummary);
+
+            //load a previously saved summary  and continue working on it
+            summaryManager.loadSummaryFromFile("TimJonsson_03-01-2022_1.json");
+
+            //Confirm summary as order in progress
             summaryManager.confirmSummary(costSummary);
-            // // summaryManager.addCostSummary(costSummary);
-            // summaryManager.showSummaryDetails(costSummary);
-            // summaryManager.saveSummaryToFile(costSummary);
 
-            // CostSummary costSummary1 = summaryManager.loadSummaryFromFile("Timmie_03-01-2008_1.json");
 
-            // CostSummary costSummary1 = summaryManager.loadSummaryFromFile("Alex__2.json");
-            // SummaryManager.confirmSummary(costSummary1);
-            // SummaryManager.showSummaryDetails();
-        }   
+            // Non functional requirements below
+
+            // Add an item that doesn't exist
+            // CostSummary costSummary1 = new CostSummary(searchRepository,jsonHandler);
+            // costSummary1.addItem("MDG", 50);
+
+            // Add item which quantity is not in stock. 
+            // CostSummary costSummary2 = new CostSummary(searchRepository,jsonHandler);
+            // costSummary2.addItem("Mdf", 100000);
+            // summaryManager.confirmSummary(costSummary2);
+
+            // Confirm CostSummary without any Items. 
+            // CostSummary costSummary3 = new CostSummary(searchRepository, jsonHandler);
+            // summaryManager.confirmSummary(costSummary3);
+
+            //Omit any missing data 
+            // CostSummary costSummary4 = new CostSummary(searchRepository, jsonHandler);
+            // costSummary4.addItem("Mdf", 5);
+            // summaryManager.showSummaryDetails(costSummary4);
+
+            //Choose VAT amount not in span
+            // CostSummary costSummary5 = new CostSummary(searchRepository,jsonHandler);
+            // costSummary5.addItem("Mdf", 8);
+            // costSummary5.updateVatAmountOnItem("Mdf", 1.2);
+            // costSummary5.updateVatAmountOnItem("Mdf", -0.2);
+
+            //Confirm summary without adding items
+            // CostSummary costSummary6 = new CostSummary(searchRepository,jsonHandler);
+            // summaryManager.confirmSummary(costSummary6);
+        }
     }
 }

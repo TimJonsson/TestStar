@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 namespace consoleproject
 {
+    // Class for handling Summar data when reading/writing to Json files
     public class SummaryData
     {
         public int SummaryId { get; set; }
@@ -17,5 +18,9 @@ namespace consoleproject
         public string ConfirmedDate { get; set; }
 
         public List<Item> items { get; set; }
+
+        public double TotalCost { get; set; }
+
+        public double TotalCostWithVAT { get; set; }
     }
 }

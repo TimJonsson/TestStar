@@ -5,9 +5,16 @@ namespace consoleproject
 {
     public class JsonHandler
     {
+        private JsonSerializer _jsonSerializer;
+
+        public JsonHandler(JsonSerializer jsonSerializer)
+        {
+            _jsonSerializer = jsonSerializer;
+        }
 
         private string defaultFileName = "warehouse.json";
 
+        // Deserializing a Json file specified with help of Newtonsoft.Json
         public dynamic loadJsonFile(string fileName = null)
         {
             if (fileName == null)
@@ -17,6 +24,7 @@ namespace consoleproject
             return jsonObj;
         }
 
+        // Updating an exisitng Json file with help of Netwonsoft.Json
         public void updateJsonFile(dynamic loadedJson, string fileName = null)
         {
             if (fileName == null)
@@ -26,12 +34,12 @@ namespace consoleproject
 
         }
 
+        // Saving summary data by serializing json to a file
         public void saveSummaryToFile(SummaryData summaryData, string fileName)
         {
             using (StreamWriter file = File.CreateText(fileName))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, summaryData);
+                _jsonSerializer.Serialize(file, summaryData);
             }
         }
     }

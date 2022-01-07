@@ -1,62 +1,93 @@
-using System; 
+using System;
 using System.Collections.Generic;
 
 namespace consoleproject
 {
-    public class SummaryManager {
+    public class SummaryManager
+    {
 
+        private SearchRepository _searchRepository;
+
+        private JsonHandler _jsonHandler;
+
+        private SummaryData _summaryData;
         private List<CostSummary> costSummaries = new List<CostSummary>();
 
-        private void addCostSummary(CostSummary costSummary) {
+        public SummaryManager(SearchRepository searchRepository, JsonHandler jsonHandler, SummaryData summaryData)
+        {
+            _searchRepository = searchRepository;
+            _jsonHandler = jsonHandler;
+            _summaryData = summaryData;
+        }
+
+        // Adding a new cost summary to the list of cost summaries
+        private void addCostSummary(CostSummary costSummary)
+        {
             costSummaries.Add(costSummary);
         }
 
-        public void showSummaryDetails(CostSummary summary) {
-                System.Console.WriteLine($"Summary ID: {summary.SummaryID}");
-                System.Console.WriteLine($"Summary Created: {summary.Created}");
-                System.Console.WriteLine($"Summar Updated: {summary.Updated}");
-                System.Console.WriteLine($"Summary Saved: {summary.SummarySavedName}");
-                System.Console.WriteLine($"Summary Due Date: {summary.DueDate}");
-                if (summary.customer == null || summary.customer.Name =="")
-                    System.Console.WriteLine($"Customer Name: ");
-                else
-                    System.Console.WriteLine($"Customer Name: {summary.customer.Name}");
-                System.Console.WriteLine($"Summary confirmed: {summary.ConfirmedDate}");
+        // Printing out a cost summary
+        public void showSummaryDetails(CostSummary summary)
+        {
+            var customerName = checkCustomerName(summary);
+            System.Console.WriteLine($"ID: {summary.SummaryID}");
+            System.Console.WriteLine($"Created: {summary.Created}");
+            System.Console.WriteLine($"Updated: {summary.Updated}");
+            System.Console.WriteLine($"Saved: {summary.SummarySavedName}");
+            System.Console.WriteLine($"Customer Name: {customerName}");
+            System.Console.WriteLine($"Due Date: {summary.DueDate}");
+            System.Console.WriteLine($"Summary confirmed: {summary.ConfirmedDate}");
 
-                var itemsList = summary.getItemDetails();
-                foreach (var item in itemsList) {
-                    System.Console.WriteLine($"Item Name: {item.Name} Item Material: {item.Material} Item Quantiy: {item.Quantity} Item Price: {item.Price} Item price with VAT {item.PriceWithVat}");
-                }
+            var itemsList = summary.getItemDetails();
+            var itemNumber = 1;
+
+            foreach (var item in itemsList)
+            {
+                System.Console.WriteLine($" Item Number: {itemNumber} \n Item Name: {item.Name} \n Item Material: {item.Material} \n Item Quantiy: {item.Quantity} \n Item Price: {item.Price} \n Item price with VAT {item.PriceWithVat} \n");
+                itemNumber++;
+            }
+
+            System.Console.WriteLine("Total cost");
+            System.Console.WriteLine($"Total: {summary.getTotalSummaryCostWithoutVAT()}");
+            System.Console.WriteLine($"Total with VAT: {summary.getTotalSummaryCostWithVAT()}");
         }
 
-        public void saveSummaryToFile(CostSummary costSummary, string fileName = null) {
+        public void saveSummaryToFile(CostSummary costSummary, string fileName = null)
+        {
             addCostSummary(costSummary);
-            SummaryData summaryData = new SummaryData();
 
-            foreach (var summary in costSummaries) {
-                if (summary == costSummary) {
+            // Looping through added cost summaries
+            foreach (var summary in costSummaries)
+            {
+                // If summary exist, getting items and customer name
+                if (summary == costSummary)
+                {
                     var itemsList = summary.getItemDetails();
                     var customerName = checkCustomerName(summary);
-                    // Second foreach not needed? 
-                    foreach (var item in itemsList) {
-                        summaryData = new SummaryData {
-                        SummaryId = summary.SummaryID,
-                        Created = summary.Created,
-                        Updated = summary.Updated,
-                        SavedAs = summary.SummarySavedName,
-                        CustomerName = customerName,
-                        DueDate = summary.DueDate,
-                        ConfirmedDate = summary.ConfirmedDate,
-                        items = itemsList
+                    // Looping through items and creating a new SummaryData object 
+                    foreach (var item in itemsList)
+                    {
+                        _summaryData = new SummaryData
+                        {
+                            SummaryId = summary.SummaryID,
+                            Created = summary.Created,
+                            Updated = summary.Updated,
+                            SavedAs = summary.SummarySavedName,
+                            CustomerName = customerName,
+                            DueDate = summary.DueDate,
+                            ConfirmedDate = summary.ConfirmedDate,
+                            items = itemsList,
+                            TotalCost = summary.getTotalSummaryCostWithoutVAT(),
+                            TotalCostWithVAT = summary.getTotalSummaryCostWithVAT()
                         };
-                        // System.Console.WriteLine($"Item Name: {item.Name} Item Material: {item.Material} Item Quantiy: {item.Quantity} Item Price: {item.Price} Item price with VAT {item.PriceWithVat}");
-                        string defaultFileName = $"{customerName}_{summary.DueDate.Replace("/", "-")}_{summary.SummaryID}.json";
+                        // Trimming any spaces given in customerName since it's not a good practise to have a file name with spaces
+                        var customerNameWithoutSpaces = customerName.Replace(" ", "");
+                        string defaultFileName = $"{customerNameWithoutSpaces}_{summary.DueDate.Replace("/", "-")}_{summary.SummaryID}.json";
 
                         if (fileName == null)
                             fileName = defaultFileName;
-                        // serialize JSON directly to a file
-                        JsonHandler jsonHandler = new JsonHandler();
-                        jsonHandler.saveSummaryToFile(summaryData, fileName);
+                        // Saving SummaryData object to a Json file
+                        _jsonHandler.saveSummaryToFile(_summaryData, fileName);
                         costSummary.SummarySavedName = fileName;
                     }
                 }
@@ -65,23 +96,22 @@ namespace consoleproject
             }
         }
 
-        public CostSummary loadSummaryFromFile(string fileName) {
-            JsonHandler jsonHandler = new JsonHandler();
-            var loadedJson = jsonHandler.loadJsonFile(fileName);
+        public CostSummary loadSummaryFromFile(string fileName)
+        {
+
+            var loadedJson = _jsonHandler.loadJsonFile(fileName);
             var summaryID = Convert.ToInt32(loadedJson["SummaryId"]);
             var summaryCreated = Convert.ToString(loadedJson["Created"]);
             CostSummary costSummary = new CostSummary(summaryID, summaryCreated);
             costSummary.Updated = loadedJson["Updated"];
             costSummary.SummarySavedName = loadedJson["SavedAs"];
-            // See if we can do this string conversion somewhere else
             costSummary.addCustomerName(Convert.ToString(loadedJson["CustomerName"]));
             costSummary.DueDate = loadedJson["DueDate"];
             costSummary.ConfirmedDate = loadedJson["ConfirmedDate"];
             addCostSummary(costSummary);
 
-            // Figure out why to add new Item into CostSummary
-            foreach (var item in loadedJson["items"]) {
-                // Create a method that's converts from JSONlinq to right types. Also use this one in searchreposititory
+            foreach (var item in loadedJson["items"])
+            {
                 costSummary.addItems(Convert.ToString(item["Name"]), Convert.ToString(item["Material"]), Convert.ToInt32(item["Quantity"]), Convert.ToInt32(item["Price"]));
             }
 
@@ -89,44 +119,52 @@ namespace consoleproject
             return costSummary;
         }
 
-        public void confirmSummary(CostSummary costSummary) {
+        public void confirmSummary(CostSummary costSummary)
+        {
             var itemDetails = costSummary.getItemDetails();
-            if (itemDetails.Count == 0) {
+            if (itemDetails.Count == 0)
+            {
                 System.Console.WriteLine("Summary can't be confirmed since no items are added to the costSummary");
-                return; 
+                return;
             }
-            if (costSummary.isSummaryOrderConfirmed == true) {
+            if (costSummary.ConfirmedDate != "")
+            {
                 System.Console.WriteLine("Summary is already confirmed");
                 return;
             }
-            foreach (var item in itemDetails) {
+            foreach (var item in itemDetails)
+            {
                 string itemName = item.Name;
                 int requestedItemQuantity = item.Quantity;
-                SearchRepository searchRepository = new SearchRepository();
-                var currentItem = searchRepository.searchItem(itemName);
-                if (currentItem.Quantity < requestedItemQuantity) {
+                var currentItem = _searchRepository.searchItem(itemName);
+                // Checking if quantity requested actually exists in warehouse.json
+                if (currentItem.Quantity < requestedItemQuantity)
+                {
                     System.Console.WriteLine($"Requested item quantity \"{requestedItemQuantity}\" doesn't exist. Item quantity for item {currentItem.Name} is {currentItem.Quantity}");
                     return;
                 }
                 var newQuantity = currentItem.Quantity - requestedItemQuantity;
                 updateItemQuantity(itemName, newQuantity);
-                costSummary.isSummaryOrderConfirmed = true;
                 costSummary.ConfirmedDate = Convert.ToString(DateTime.Now);
             }
         }
 
-        public void updateItemQuantity(string name, int quantity) {
-            JsonHandler jsonHandler = new JsonHandler();
-            var loadedJson = jsonHandler.loadJsonFile(); 
-            foreach(var items in loadedJson["items"]) {
+        // Updating item quantity after cost summary is confirmed. 
+        public void updateItemQuantity(string name, int quantity)
+        {
+            var loadedJson = _jsonHandler.loadJsonFile();
+            foreach (var items in loadedJson["items"])
+            {
                 var item = Convert.ToString(items["Name"]);
                 if (item == name)
-                    items["Quantity"] = quantity; 
+                    items["Quantity"] = quantity;
             }
-            jsonHandler.updateJsonFile(loadedJson);
+            _jsonHandler.updateJsonFile(loadedJson);
         }
 
-        private string checkCustomerName(CostSummary costSummary) {
+        // Checking if customerName is assigned, if not returning an empty string
+        private string checkCustomerName(CostSummary costSummary)
+        {
             if (costSummary.customer == null)
                 return "";
             else

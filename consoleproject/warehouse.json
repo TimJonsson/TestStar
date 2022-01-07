@@ -3,15 +3,15 @@
     {
       "Name": "Teak",
       "Material": "Wood",
-      "Quantity": 939,
+      "Quantity": 0,
       "Price": 215,
       "VatPercentage": 1.25,
       "PriceWithVat": 268.75
     },
     {
-      "Name": "MDF",
+      "Name": "Mdf",
       "Material": "Wood",
-      "Quantity": 1,
+      "Quantity": 19821,
       "Price": 145,
       "VatPercentage": 1.25,
       "PriceWithVat": 181.25

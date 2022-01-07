@@ -1,0 +1,29 @@
+{
+    "SummaryId":152,
+    "Created":"01/04/2022 21:04:14",
+    "Updated":"01/04/2022 21:04:14",
+    "SavedAs":"TimJonsson_03-01-2022_152.json",
+    "CustomerName":"Tim Jonsson",
+    "DueDate":"03/01/2022",
+    "ConfirmedDate":"01/04/2022 21:04:14",
+    "items":[
+       {
+          "Name":"Mdf",
+          "Material":"Wood",
+          "Quantity":999,
+          "Price":145,
+          "VatPercentage":0.3,
+          "PriceWithVat":188.5
+       },
+       {
+          "Name":"Teak",
+          "Material":"Wood",
+          "Quantity":50,
+          "Price":215,
+          "VatPercentage":0.25,
+          "PriceWithVat":268.75
+       }
+    ],
+    "TotalCost":25105.0,
+    "TotalCostWithVAT":32099.0
+ }
