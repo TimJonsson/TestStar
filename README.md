@@ -1,1 +1,2 @@
-# TestStar
+# Repo for learning purposes. 
+Creating a [cost summary](https://github.com/TimJonsson/TestStar/blob/main/consoleproject/CostSummary.cs) where I'm reading data from a [json file](https://github.com/TimJonsson/TestStar/blob/main/consoleproject/TimJonsson_03-01-2022_1.json). [SummaryManager](https://github.com/TimJonsson/TestStar/blob/main/consoleproject/SummaryManager.cs) class handles different actions for a cost summary
